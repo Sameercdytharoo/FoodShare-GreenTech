@@ -3,6 +3,7 @@
 ## 1. Group Information
 **Group Name:** FoodShare Green Tech Team
 **Project Title:** FoodShare - Community Food Waste Reduction Platform
+**GitHub Repository:** [https://github.com/Sameercdytharoo/FoodShare-GreenTech](https://github.com/Sameercdytharoo/FoodShare-GreenTech)
 
 **Members:**
 1.  **Sameer Chaudhary Tharu** (ID: A00027591) - Lead Developer / Scrum Master
@@ -15,6 +16,8 @@
 
 ## 2. Project Description
 **Problem:** Millions of tons of edible food are wasted annually while many people struggle with food insecurity.
+**Sprint Goal:** Establish the technical foundation (Database, API) and create the basic user interface for viewing food items.
+**Project Link:** [https://github.com/Sameercdytharoo/FoodShare-GreenTech](https://github.com/Sameercdytharoo/FoodShare-GreenTech)
 **Solution:** A web application that connects individuals and businesses with surplus food to community members who can use it. The platform facilitates the listing, discovery, and claiming of free food items, promoting sustainability and community support.
 **Scope (MVP):** User registration, posting food items, viewing available items on a map/list, and claiming items.
 
@@ -63,7 +66,7 @@
 ## 6. Meeting Records
 
 ### Meeting 1: Kick-off
-*   **Date:** 05/02/2026
+*   **Date:** 06/02/2026
 *   **Attendees:** All members
 *   **Agenda:** Brainstorming ideas, selecting "Food Waste" theme.
 *   **Outcome:** Selected "FoodShare" project. Assigned roles. Created GitHub Repo.

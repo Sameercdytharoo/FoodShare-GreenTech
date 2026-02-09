@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Foodshare Green Tech 🌿
 
 **Group:** FoodShare Green Tech Team
@@ -48,3 +49,6 @@ According to your Assessment Brief, ensure you complete these manual steps:
 ## License
 ## License
 FoodShare Green Tech Team - 2026
+=======
+# Software Engineering Group Project.
+>>>>>>> origin/main
