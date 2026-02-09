@@ -1,0 +1,81 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title FoodShare - Green Tech
+    link(rel="stylesheet", href="/css/style.css")
+    link(href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap", rel="stylesheet")
+    link(rel="stylesheet", href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css", integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=", crossorigin="")
+    script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js", integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=", crossorigin="")
+  body
+    header
+      div.container.header-content
+        h1.logo FoodShare 🌿
+        nav
+          div.user-switcher
+            label(for="user-select") Personas:
+            select#user-select
+              option(value="1") 👨‍🍳 Sameer (Donor)
+              option(value="2") 👨‍🎓 Mahesh (Receiver)
+              option(value="3") 🥖 Prativa (Business)
+          button#btn-donate.btn.btn-primary Donate Food
+          button#btn-login.btn.btn-secondary Login
+
+    main.container
+      section.hero
+        h2 Share Food, Reduce Waste
+        p Connect with your community to share surplus food and help the planet.
+
+      section.map-section
+        h3 Food Map
+        div#map-container
+          div#map
+
+      section.food-grid-section
+        h3 Available Food Near You
+        div#food-grid.food-grid
+          //- Food items will be injected here by JS for now, or we can server-side render them later
+          p.loading Loading fresh items...
+
+    //- Modal for Adding Food
+    div#donate-modal.modal.hidden
+      div.modal-content
+        span.close &times;
+        h2 Post Food Item
+        form#donate-form
+          div.form-group
+            label(for="name") Item Name
+            input(type="text", id="name", name="name", required)
+          div.form-group
+            label(for="description") Description
+            textarea(id="description", name="description", required)
+          div.form-group
+            label(for="category") Category
+            select(id="category", name="category")
+              option(value="Fruit") Fruit
+              option(value="Vegetable") Vegetable
+              option(value="Canned Goods") Canned Goods
+              option(value="Bakery") Bakery
+              option(value="Other") Other
+          div.form-group
+            label(for="expiry_date") Expiry Date
+            input(type="date", id="expiry_date", name="expiry_date", required)
+          div.form-group
+            label(for="location") Location
+            input(type="text", id="location", name="location", required)
+          //- Hidden donor ID for demo - updated by JS
+          input(type="hidden", id="donor_id", name="donor_id", value="1")
+          
+          button(type="submit").btn.btn-primary Post Item
+
+    footer.container
+      p &copy; 2026 FoodShare Green Tech. Created by:
+      ul.team-list
+        li Sameer Chaudhary Tharu
+        li Mahesh Batala
+        li Dhiraj Yadav
+        li Prativa Rai
+        li Rupesh Shah
+
+    script(src="/js/main.js")
