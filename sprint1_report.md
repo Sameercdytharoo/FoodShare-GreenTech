@@ -4,7 +4,7 @@
 **Project Name:** Foodshare Green Tech
 **Sprint Goal:** Establish the technical foundation (Database, API) and create the basic user interface for viewing food items.
 
-## 2. Database Design
+## 2. Database Designe
 We have updated the database schema to support the core functionality of sharing food.
 
 ### New Tables
