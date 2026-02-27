@@ -1,0 +1,23 @@
+flowchart TD
+    %% Style Definitions
+    classDef startEnd fill:#58a65c,stroke:#333,stroke-width:2px,color:#fff;
+    classDef action fill:#2e5da3,stroke:#333,stroke-width:1px,color:#fff;
+    classDef processing fill:#76448a,stroke:#333,stroke-width:1px,color:#fff;
+    classDef decision fill:#e67e22,stroke:#333,stroke-width:1px,color:#fff;
+    classDef update fill:#16a085,stroke:#333,stroke-width:1px,color:#fff;
+    classDef error fill:#c0392b,stroke:#333,stroke-width:1px,color:#fff;
+
+    S([Start]):::startEnd --> GetInfo[Get User & Item Info]:::action
+    GetInfo --> Valid{Is Claim\nValid?}:::decision
+    
+    Valid -- No --> Error[Show Error Message]:::error
+    Error --> Fail[Claim Failed]:::error
+    Fail --> Conf[Send Notification]:::startEnd
+
+    Valid -- Yes --> Update[Update Item Status]:::update
+    Update --> PayDecision{User Verified?}:::decision
+    
+    PayDecision -- No --> Fail
+    PayDecision -- Yes --> Conf
+    
+    Conf --> E([End]):::startEnd

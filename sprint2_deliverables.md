@@ -27,8 +27,31 @@ The platform allows individuals, households, and local businesses to list surplu
 ## 3. Requirements Model - Use Case Diagram
 The following diagram illustrates the primary interactions between our system actors and the core functionalities as defined for the MVP.
 
+```mermaid
+usecaseDiagram
+    actor "Donor" as D
+    actor "Recipient" as R
+    actor "Guest" as G
 
----
+    package "FoodShare System" {
+        usecase "Register/Login" as UC1
+        usecase "List surplus food" as UC2
+        usecase "Browse food items" as UC3
+        usecase "Filter by category" as UC4
+        usecase "Claim food item" as UC5
+        usecase "Manage personal listings" as UC6
+    }
+
+    G --> UC1
+    G --> UC3
+    D --> UC1
+    D --> UC2
+    D --> UC6
+    R --> UC1
+    R --> UC3
+    R --> UC4
+    R --> UC5
+```
 
 ---
 
@@ -59,8 +82,36 @@ These low-fidelity wireframes serve as the blueprint for our Sprint 3 developmen
 #### Visual Donation Process
 ![FoodShare Visual Flowchart](file:///d:/software_engineering/foodshare_green_tech/images/visual_flowchart.png)
 
+#### Technical Workflow (Mermaid)
 
----
+#### Listing a Food Item (Donor Workflow)
+```mermaid
+flowchart TD
+    A[Start] --> B[Login to System]
+    B --> C[Navigate to 'Post Food']
+    C --> D[Fill in food details & upload photo]
+    D --> E{Details Valid?}
+    E -- No --> F[Show Error Messages]
+    F --> D
+    E -- Yes --> G[Save to Database]
+    G --> H[Display Success Message]
+    H --> I[End]
+```
+
+#### Claiming a Food Item (Recipient Workflow)
+```mermaid
+flowchart TD
+    A[Start] --> B[Browse Food List]
+    B --> C[Select an Item]
+    C --> D[Click 'Claim Item']
+    D --> E{User Logged In?}
+    E -- No --> F[Redirect to Login]
+    F --> B
+    E -- Yes --> G[Confirm Claim]
+    G --> H[Update Item Status to 'Claimed']
+    H --> I[Notify Donor via Dashboard]
+    I --> J[End]
+```
 
 ---
 
@@ -71,16 +122,55 @@ These low-fidelity wireframes serve as the blueprint for our Sprint 3 developmen
 #### Visual Schema Overview
 ![FoodShare Visual ERD](file:///d:/software_engineering/foodshare_green_tech/images/visual_erd.png)
 
+#### Technical Schema (Mermaid)
+```mermaid
+erDiagram
+    USER ||--o{ FOOD_ITEM : "posts"
+    USER ||--o{ CLAIM : "makes"
+    FOOD_ITEM ||--o{ CLAIM : "is subject of"
+    CATEGORY ||--o{ FOOD_ITEM : "classifies"
 
----
+    USER {
+        int id PK
+        string full_name
+        string email
+        string password
+    }
+    FOOD_ITEM {
+        int id PK
+        string title
+        datetime expiry_date
+        string status
+    }
+    CLAIM {
+        int id PK
+        int item_id FK
+        datetime claim_date
+    }
+```
 
 ### 5.2 Sequence Diagram (Claiming Process)
-
----
+```mermaid
+sequenceDiagram
+    participant R as Recipient
+    participant S as System/Server
+    participant DB as MySQL Database
+    R->>S: Request Claim
+    S->>DB: Check Availability
+    DB-->>S: Available
+    S->>DB: Update Status to Claimed
+    S->>R: Confirm Success
+```
 
 ### 5.3 Class Diagram (Backend Structure)
-
----
+```mermaid
+classDiagram
+    class User { +login() +register() }
+    class FoodItem { +create() +update() }
+    class Claim { +process() }
+    User "1" -- "*" FoodItem
+    User "1" -- "*" Claim
+```
 
 ---
 
