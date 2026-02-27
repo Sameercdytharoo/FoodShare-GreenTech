@@ -210,18 +210,6 @@ Our team uses a unified GitHub Project board.
 | **Discussion points** | Approved Forest Green palette and card-based layout. |
 | **Actions** | FS-03: Finalize CSS Tokens (Done) |
 
-### 📝 Meeting Record: #04 (Submission Review)
-| **Meeting Minutes** | **Details** |
-| :--- | :--- |
-| **Date and Time** | 25/02/2026 \| 10:00 AM |
-| **Project Name** | **FoodShare Green Tech** |
-| **Meeting Goal** | Finalize Sprint 2 deliverables for submission. |
-| **Note taker** | Rupesh Shah |
-| **Discussion points** | Verified all Mermaid diagrams and specification details. |
-| **Actions** | FS-04: Submit Sprint 2 Report (In Progress) |
-
----
-
 ## 10. Student Readiness Statement
 All team members (**Sameer, Mahesh, Dhiraj, Prativa, Rupesh**) are up to date with lab work and have Docker configured. The team is fully prepared to start development of Sprint 3 features immediately.
 
