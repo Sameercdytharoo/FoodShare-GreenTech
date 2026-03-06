@@ -30,20 +30,7 @@ A web application to reduce food waste by connecting community members to share 
 - `static/`: Frontend assets (`css/`, `js/`)
 - `foodshare-db.sql`: Database schema and initial data
 
-## 📂 Submission & Assessment Steps (Sprint 1)
 
-According to your Assessment Brief, ensure you complete these manual steps:
-
-1.  **GitHub Activity**:
-    *   Push this code to your group's GitHub repository.
-    *   **CRITICAL**: Have *every* group member edit `CONTRIBUTORS.md` and push the change. This proves team activity.
-    *   Create a **Kanban Board** in GitHub Projects (copy items from `BACKLOG.md`).
-
-2.  **PDF Submission**:
-    *   Open `sprint1_deliverables.md`.
-    *   **Fill in your real names** at the top.
-    *   Export/Print the file as a **PDF**.
-    *   Submit this PDF to Moodle by the deadline.
 
 ## License
 FoodShare Green Tech Team - 2026
