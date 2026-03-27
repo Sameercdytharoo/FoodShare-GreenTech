@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h2.page-title Category: #{category.name || 'Category'}
+  
+  if items.length == 0
+    p No food items available in this category.
+  else
+    div.food-grid
+      each item in items
+        div.food-card
+          div.card-header
+            span.card-category= category.name || 'Category'
+            span.card-status= item.status ? item.status.toUpperCase() : 'UNKNOWN'
+          div.card-body
+            h4
+              a(href=`/items/${item.id}` style="color:var(--text-color); text-decoration:none;")= item.title || 'Untitled'
+            p= (item.description || '').length > 100 ? (item.description || '').substring(0, 100) + '...' : (item.description || 'No description.')
+            div.card-meta
+              span Expiry: #{item.expiry_date ? new Date(item.expiry_date).toLocaleDateString() : 'N/A'}
+              span Donor: 
+                a(href=`/users/${item.donor_id}`) #{item.donor_name || 'Unknown'}
+          div(style="padding: 1rem; text-align: center; border-top: 1px solid #eee;")
+            a.btn.btn-primary(href=`/items/${item.id}`) View Details

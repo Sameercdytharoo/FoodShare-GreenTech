@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  div.profile-header(style="background: white; padding: 2rem; border-radius: 12px; box-shadow: var(--shadow-sm); margin-top: 2rem; display: flex; align-items: center; gap: 2rem;")
+    div(style="width: 100px; height: 100px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: bold;") 
+      = (user.username && user.username.length > 0) ? user.username.charAt(0).toUpperCase() : 'U'
+    div
+      h2(style="margin: 0; color: var(--text-color);")= user.username || 'Unknown'
+      p(style="color: var(--text-light);") Member since #{user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
+
+  h3(style="margin-top: 2rem;") Food Listings by #{user.username || 'this user'}
+  
+  if items.length == 0
+    p This user hasn't posted any food items yet.
+  else
+    div.food-grid
+      each item in items
+        div.food-card
+          div.card-body
+            h4
+              a(href=`/items/${item.id}` style="color:var(--text-color); text-decoration:none;")= item.title
+            p= (item.description || '').length > 80 ? (item.description || '').substring(0, 80) + '...' : item.description || ''
+            p
+              strong Status: 
+              span= item.status ? item.status.toUpperCase() : 'UNKNOWN'
+          div(style="padding: 1rem; text-align: center; border-top: 1px solid #eee;")
+            a.btn.btn-secondary(href=`/items/${item.id}`) View Details

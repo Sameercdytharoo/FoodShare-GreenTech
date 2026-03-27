@@ -81,7 +81,7 @@ app.post("/api/claim", function (req, res) {
 
     // Use a transaction or sequential queries to update status and record claim
     const updateSql = "UPDATE food_items SET status = 'claimed' WHERE id = ? AND status = 'available'";
-    const claimSql = "INSERT INTO claims (item_id, receiver_id) VALUES (?, ?)";
+    const claimSql = "INSERT INTO claims (item_id, recipient_id) VALUES (?, ?)";
 
     db.query(updateSql, [item_id])
         .then(results => {
@@ -91,7 +91,8 @@ app.post("/api/claim", function (req, res) {
             return db.query(claimSql, [item_id, receiver_id]);
         })
         .then(() => {
-            res.status(200).json({ message: "Item claimed successfully" });
+            // Redirect back to the item detail page on success
+            res.redirect("/items/" + item_id);
         })
         .catch(err => {
             console.error(err);
@@ -118,5 +119,92 @@ app.get("/api/current-user", function (req, res) {
     });
 });
 
+// --- SPRINT 3 PAGE ROUTES ---
+
+// Listing page
+app.get("/items", function(req, res) {
+    const sql = "SELECT food_items.*, users.username as donor_name, categories.name as category_name FROM food_items JOIN users ON food_items.donor_id = users.id JOIN categories ON food_items.category_id = categories.id ORDER BY food_items.created_at DESC";
+    db.query(sql).then(results => {
+        res.render("items", { items: results });
+    }).catch(err => {
+        console.error(err);
+        res.status(500).send("Server Error");
+    });
+});
+
+// Detail page
+app.get("/items/:id", function(req, res) {
+    const sql = "SELECT food_items.*, users.username as donor_name, categories.name as category_name FROM food_items JOIN users ON food_items.donor_id = users.id JOIN categories ON food_items.category_id = categories.id WHERE food_items.id = ?";
+    db.query(sql, [req.params.id]).then(results => {
+        if (results.length > 0) {
+            res.render("item-detail", { item: results[0] });
+        } else {
+            res.status(404).send("Item Not Found");
+        }
+    }).catch(err => {
+        console.error(err);
+        res.status(500).send("Server Error");
+    });
+});
+
+// Users list page
+app.get("/users", function(req, res) {
+    const sql = "SELECT * FROM users ORDER BY created_at DESC";
+    db.query(sql).then(results => {
+        res.render("users", { users: results });
+    }).catch(err => {
+        console.error(err);
+        res.status(500).send("Server Error");
+    });
+});
+
+// User profile page
+app.get("/users/:id", function(req, res) {
+    const sqlUser = "SELECT * FROM users WHERE id = ?";
+    const sqlItems = "SELECT * FROM food_items WHERE donor_id = ? ORDER BY created_at DESC";
+    Promise.all([
+        db.query(sqlUser, [req.params.id]),
+        db.query(sqlItems, [req.params.id])
+    ]).then(([users, items]) => {
+        if (users.length > 0) {
+            res.render("user-profile", { user: users[0], items: items });
+        } else {
+            res.status(404).send("User Not Found");
+        }
+    }).catch(err => {
+        console.error(err);
+        res.status(500).send("Server Error");
+    });
+});
+
+// Categories list
+app.get("/categories", function(req, res) {
+    const sql = "SELECT c.id, c.name, COUNT(f.id) as item_count FROM categories c LEFT JOIN food_items f ON c.id = f.category_id GROUP BY c.id, c.name";
+    db.query(sql).then(results => {
+        res.render("categories", { categories: results });
+    }).catch(err => {
+        console.error(err);
+        res.status(500).send("Server Error");
+    });
+});
+
+// Category detail page
+app.get("/categories/:id", function(req, res) {
+    const catSql = "SELECT * FROM categories WHERE id = ?";
+    const itemSql = "SELECT food_items.*, users.username as donor_name FROM food_items JOIN users ON food_items.donor_id = users.id WHERE category_id = ?";
+    Promise.all([
+        db.query(catSql, [req.params.id]),
+        db.query(itemSql, [req.params.id])
+    ]).then(([cats, items]) => {
+        if(cats.length > 0) {
+             res.render("category-detail", { category: cats[0], items: items });
+        } else {
+             res.status(404).send("Category Not Found");
+        }
+    }).catch(err => {
+        console.error(err);
+        res.status(500).send("Server Error");
+    });
+});
 
 module.exports = app;

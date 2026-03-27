@@ -1,0 +1,34 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title FoodShare - Green Tech
+    link(rel="stylesheet", href="/css/style.css")
+    link(href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap", rel="stylesheet")
+    style.
+      .nav-links { display: inline-flex; gap: 15px; margin-right: 20px; align-items: center; }
+      .nav-links a { color: var(--text-color); text-decoration: none; font-weight: 600; }
+      .nav-links a:hover { color: var(--primary-color); }
+      .page-title { margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; }
+  body
+    header
+      div.container.header-content
+        h1.logo 
+          a(href="/" style="text-decoration:none; color:inherit;") FoodShare 🌿
+        nav
+          div.nav-links
+            a(href="/items") Food Listings
+            a(href="/categories") Categories
+            a(href="/users") Community
+          button(onclick="window.location.href='/'", class="btn btn-primary") Post Food
+    main.container(style="min-height: 70vh;")
+      block content
+    footer.container(style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;")
+      p &copy; 2026 FoodShare Green Tech. Created by:
+      ul.team-list(style="list-style: none; padding: 0; display: flex; gap: 10px; flex-wrap: wrap;")
+        li Sameer Chaudhary Tharu |
+        li Mahesh Batala |
+        li Dhiraj Yadav |
+        li Prativa Rai |
+        li Rupesh Shah

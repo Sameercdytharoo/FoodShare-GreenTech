@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h2.page-title Browse Categories
+  
+  if categories.length == 0
+    p No categories found.
+  else
+    div.food-grid
+      each category in categories
+        div.food-card(style="text-align: center; padding: 2rem 1rem;")
+          div.card-body
+            h4= category.name
+            p(style="font-size: 1.2rem; color: var(--primary-color); font-weight: bold;") #{category.item_count} items
+            div(style="margin-top: 1rem;")
+              a.btn.btn-primary(href=`/categories/${category.id}`) View Category
