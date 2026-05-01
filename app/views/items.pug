@@ -3,6 +3,24 @@ extends layout
 block content
   h2.page-title Available Food Listings
   
+  //- Search and Filter Form (Basic Matching Algorithm)
+  div.search-bar(style="background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: var(--shadow-sm); margin-bottom: 2rem;")
+    form(action="/items" method="GET" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;")
+      div(style="flex: 1; min-width: 200px;")
+        label.form-label(for="q") Search Items
+        input#q.form-control(type="text" name="q" placeholder="What are you looking for?" value=searchQuery)
+      div(style="flex: 1; min-width: 200px;")
+        label.form-label(for="category") Category
+        select#category.form-control(name="category")
+          option(value="all" selected=(selectedCategory === 'all')) All Categories
+          if categories
+            each cat in categories
+              option(value=cat.id selected=(selectedCategory == cat.id))= cat.name
+      div
+        button.btn.btn-primary(type="submit" style="height: 42px;") Search / Filter
+        if searchQuery || (selectedCategory !== 'all')
+          a.btn.btn-secondary(href="/items" style="margin-left: 10px; height: 42px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none;") Clear
+
   if items.length == 0
     p No food items available at the moment. Check back later!
   else

@@ -7,6 +7,7 @@ block content
     div
       h2(style="margin: 0; color: var(--text-color);")= user.username || 'Unknown'
       p(style="color: var(--text-light);") Member since #{user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
+      p(style="font-weight: bold; color: var(--primary-color);") 🏆 Community Points: #{user.points || 0}
 
   h3(style="margin-top: 2rem;") Food Listings by #{user.username || 'this user'}
   

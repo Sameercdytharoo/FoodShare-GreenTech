@@ -26,6 +26,7 @@ CREATE TABLE `users` (
   `username` varchar(50) NOT NULL UNIQUE,
   `email` varchar(100) NOT NULL UNIQUE,
   `password_hash` varchar(255) NOT NULL,
+  `points` int DEFAULT 0,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -103,9 +104,26 @@ INSERT INTO `categories` (`id`, `name`) VALUES
 --
 
 INSERT INTO `food_items` (`id`, `donor_id`, `title`, `description`, `image_url`, `expiry_date`, `category_id`, `status`) VALUES
-(1, 1, 'Assorted Pastries', 'Leftover croissants and muffins from the closing shift. Still fresh!', '/img/pastries.png', '2026-06-15 17:00:00', 1, 'available'),
-(2, 3, 'Sourdough Bread', 'Day-old artisan bread, perfectly good for toasting.', '/img/bread.png', '2026-06-15 18:30:00', 1, 'available'),
-(3, 1, 'Surplus Canned Beans', 'Extra stock from student pantry clean-out.', '/img/beans.png', '2027-01-01 00:00:00', 3, 'available');
+(1, 1, 'Assorted Pastries', 'Leftover croissants and muffins from the closing shift. Still fresh!', '/img/default-food.png', '2026-06-15 17:00:00', 1, 'available'),
+(2, 3, 'Sourdough Bread', 'Day-old artisan bread, perfectly good for toasting.', '/img/default-food.png', '2026-06-15 18:30:00', 1, 'available'),
+(3, 1, 'Chocolate Chip Cookies', 'A dozen freshly baked cookies, extra from an event.', '/img/default-food.png', '2026-06-16 12:00:00', 1, 'available'),
+(4, 3, 'Baguettes', 'Two French baguettes, baked this morning.', '/img/default-food.png', '2026-06-14 20:00:00', 1, 'available'),
+(5, 2, 'Organic Apples', 'A bag of fresh red apples from my garden.', '/img/default-food.png', '2026-06-25 10:00:00', 2, 'available'),
+(6, 1, 'Carrots and Celery', 'Unopened bags of carrots and celery.', '/img/default-food.png', '2026-06-20 15:00:00', 2, 'available'),
+(7, 3, 'Bananas', 'A bunch of slightly brown bananas, perfect for banana bread.', '/img/default-food.png', '2026-06-13 18:00:00', 2, 'available'),
+(8, 2, 'Fresh Spinach', 'Large bag of organic spinach, untouched.', '/img/default-food.png', '2026-06-16 09:00:00', 2, 'available'),
+(9, 1, 'Surplus Canned Beans', 'Extra stock from student pantry clean-out.', '/img/default-food.png', '2027-01-01 00:00:00', 3, 'available'),
+(10, 2, 'Tomato Soup', 'Four cans of creamy tomato soup.', '/img/default-food.png', '2028-05-10 00:00:00', 3, 'available'),
+(11, 3, 'Canned Corn', 'Sweet corn kernels, 3 cans available.', '/img/default-food.png', '2027-11-20 00:00:00', 3, 'available'),
+(12, 1, 'Tuna Chunks', 'Canned tuna in spring water, pack of 2.', '/img/default-food.png', '2028-02-15 00:00:00', 3, 'available'),
+(13, 2, 'Whole Milk', '1 gallon of unopened whole milk.', '/img/default-food.png', '2026-06-22 12:00:00', 4, 'available'),
+(14, 3, 'Cheddar Cheese', 'Block of mild cheddar cheese.', '/img/default-food.png', '2026-07-05 10:00:00', 4, 'available'),
+(15, 1, 'Greek Yogurt', '6-pack of plain Greek yogurt.', '/img/default-food.png', '2026-06-28 08:00:00', 4, 'available'),
+(16, 2, 'Butter', 'Unsalted butter, 2 sticks left over from baking.', '/img/default-food.png', '2026-08-10 14:00:00', 4, 'available'),
+(17, 3, 'Pasta Noodles', 'Unopened box of spaghetti noodles.', '/img/default-food.png', '2027-12-30 00:00:00', 5, 'available'),
+(18, 1, 'Trail Mix', 'Large bag of nuts and dried fruit.', '/img/default-food.png', '2026-10-15 17:00:00', 5, 'available'),
+(19, 2, 'Olive Oil', 'Extra virgin olive oil, 500ml unopened bottle.', '/img/default-food.png', '2028-01-22 00:00:00', 5, 'available'),
+(20, 3, 'Rice', '5kg bag of Basmati rice.', '/img/default-food.png', '2028-06-01 00:00:00', 5, 'available');
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

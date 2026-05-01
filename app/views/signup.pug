@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  .container.mt-5
+    .row.justify-content-center
+      .col-md-6
+        .card
+          .card-header
+            h3 Sign Up for FoodShare
+          .card-body
+            if error
+              .alert.alert-danger= error
+            form(action="/signup" method="POST")
+              .mb-3
+                label.form-label(for="username") Username
+                input#username.form-control(type="text" name="username" required placeholder="e.g. johndoe")
+              .mb-3
+                label.form-label(for="email") Email Address
+                input#email.form-control(type="email" name="email" required placeholder="e.g. john@example.com")
+              .mb-3
+                label.form-label(for="password") Password
+                input#password.form-control(type="password" name="password" required placeholder="Choose a strong password")
+              button.btn.btn-primary.w-100(type="submit") Sign Up

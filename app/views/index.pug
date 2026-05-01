@@ -15,14 +15,14 @@ html(lang="en")
         div.search-container
           input#search-input(type="text", placeholder="Search for food...")
         nav
-          div.user-switcher
-            label(for="user-select") Personas:
-            select#user-select
-              option(value="1") 👨‍🍳 Sameer (Donor)
-              option(value="2") 👨‍🎓 Mahesh (Receiver)
-              option(value="3") 🥖 Prativa (Business)
-          button#btn-donate.btn.btn-primary Donate Food
-          button#btn-login.btn.btn-secondary Login
+          if sessionUser
+            button(onclick="window.location.href='/items'", class="btn btn-primary") Food Listings
+            button(onclick="window.location.href='/users/" + sessionUser.id + "'", class="btn btn-secondary") Profile
+            button(onclick="window.location.href='/logout'", class="btn btn-secondary") Logout
+          else
+            button(onclick="window.location.href='/items'", class="btn btn-primary") Browse Food
+            button(onclick="window.location.href='/login'", class="btn btn-secondary") Login
+            button(onclick="window.location.href='/signup'", class="btn btn-secondary") Sign Up
 
     main.container
       section.hero

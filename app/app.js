@@ -1,6 +1,8 @@
 // Import express.js
 const express = require("express");
 const path = require('path');
+const session = require('express-session');
+const bcrypt = require('bcryptjs');
 
 // Create express app
 const app = express();
@@ -11,6 +13,20 @@ app.use(express.static("static"));
 // Parse JSON bodies (as sent by API clients)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Session configuration
+app.use(session({
+    secret: 'foodshare_secret_key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
+
+// Middleware to make session user available to all Pug templates
+app.use((req, res, next) => {
+    res.locals.sessionUser = req.session.user;
+    next();
+});
 
 // Set view engine to Pug
 app.set('view engine', 'pug');
@@ -73,22 +89,33 @@ app.get("/api/users", function (req, res) {
 
 // POST /api/claim - Claim a food item
 app.post("/api/claim", function (req, res) {
-    const { item_id, receiver_id } = req.body;
+    if (!req.session.user) {
+        return res.status(401).send("You must be logged in to claim an item.");
+    }
+    const item_id = req.body.item_id;
+    const receiver_id = req.session.user.id;
 
-    if (!item_id || !receiver_id) {
-        return res.status(400).json({ error: "Missing item_id or receiver_id" });
+    if (!item_id) {
+        return res.status(400).json({ error: "Missing item_id" });
     }
 
-    // Use a transaction or sequential queries to update status and record claim
-    const updateSql = "UPDATE food_items SET status = 'claimed' WHERE id = ? AND status = 'available'";
-    const claimSql = "INSERT INTO claims (item_id, recipient_id) VALUES (?, ?)";
-
-    db.query(updateSql, [item_id])
+    // First get the donor_id to award points
+    const getDonorSql = "SELECT donor_id FROM food_items WHERE id = ? AND status = 'available'";
+    db.query(getDonorSql, [item_id])
         .then(results => {
-            if (results.affectedRows === 0) {
+            if (results.length === 0) {
                 throw new Error("Item already claimed or not found");
             }
-            return db.query(claimSql, [item_id, receiver_id]);
+            const donor_id = results[0].donor_id;
+            
+            const updateSql = "UPDATE food_items SET status = 'claimed' WHERE id = ?";
+            const claimSql = "INSERT INTO claims (item_id, recipient_id) VALUES (?, ?)";
+            const pointsSql = "UPDATE users SET points = points + 10 WHERE id = ?";
+
+            // Execute queries sequentially
+            return db.query(updateSql, [item_id])
+                .then(() => db.query(claimSql, [item_id, receiver_id]))
+                .then(() => db.query(pointsSql, [donor_id]));
         })
         .then(() => {
             // Redirect back to the item detail page on success
@@ -121,11 +148,44 @@ app.get("/api/current-user", function (req, res) {
 
 // --- SPRINT 3 PAGE ROUTES ---
 
-// Listing page
+// Listing page with Search/Match Algorithm
 app.get("/items", function(req, res) {
-    const sql = "SELECT food_items.*, users.username as donor_name, categories.name as category_name FROM food_items JOIN users ON food_items.donor_id = users.id JOIN categories ON food_items.category_id = categories.id ORDER BY food_items.created_at DESC";
-    db.query(sql).then(results => {
-        res.render("items", { items: results });
+    let sql = "SELECT food_items.*, users.username as donor_name, categories.name as category_name FROM food_items JOIN users ON food_items.donor_id = users.id JOIN categories ON food_items.category_id = categories.id";
+    const queryParams = [];
+    const conditions = [];
+
+    // Search by title or description
+    if (req.query.q) {
+        conditions.push("(food_items.title LIKE ? OR food_items.description LIKE ?)");
+        queryParams.push(`%${req.query.q}%`, `%${req.query.q}%`);
+    }
+
+    // Filter by category
+    if (req.query.category && req.query.category !== 'all') {
+        conditions.push("food_items.category_id = ?");
+        queryParams.push(req.query.category);
+    }
+
+    // Add conditions to SQL
+    if (conditions.length > 0) {
+        sql += " WHERE " + conditions.join(" AND ");
+    }
+
+    sql += " ORDER BY food_items.created_at DESC";
+
+    // We also need all categories for the dropdown in the search form
+    const catSql = "SELECT * FROM categories";
+
+    Promise.all([
+        db.query(sql, queryParams),
+        db.query(catSql)
+    ]).then(([items, categories]) => {
+        res.render("items", { 
+            items: items, 
+            categories: categories, 
+            searchQuery: req.query.q || '',
+            selectedCategory: req.query.category || 'all'
+        });
     }).catch(err => {
         console.error(err);
         res.status(500).send("Server Error");
@@ -205,6 +265,81 @@ app.get("/categories/:id", function(req, res) {
         console.error(err);
         res.status(500).send("Server Error");
     });
+});
+
+// --- SPRINT 4 LOGIN ROUTES ---
+
+// Render the login page
+app.get("/login", function(req, res) {
+    res.render("login");
+});
+
+// Render the signup page
+app.get("/signup", function(req, res) {
+    res.render("signup");
+});
+
+// Handle signup submission
+app.post("/signup", async function(req, res) {
+    const { username, email, password } = req.body;
+    
+    if (!username || !email || !password) {
+        return res.render("signup", { error: "Please fill in all fields" });
+    }
+
+    try {
+        const hash = await bcrypt.hash(password, 10);
+        const sql = "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)";
+        await db.query(sql, [username, email, hash]);
+        res.redirect("/login");
+    } catch (err) {
+        console.error(err);
+        if (err.code === 'ER_DUP_ENTRY') {
+             res.render("signup", { error: "Username or email already exists" });
+        } else {
+             res.status(500).send("Server Error");
+        }
+    }
+});
+
+// Handle login submission
+app.post("/login", async function(req, res) {
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+        return res.render("login", { error: "Please enter both email and password" });
+    }
+
+    const sql = "SELECT * FROM users WHERE email = ?";
+    db.query(sql, [email]).then(async results => {
+        if (results.length > 0) {
+            const user = results[0];
+            
+            // Compare the hashed password
+            const isMatch = await bcrypt.compare(password, user.password_hash);
+            
+            // Fallback for sprint dummy accounts that aren't actually hashed in the db
+            const isDummyMatch = user.password_hash === password;
+            
+            if (isMatch || isDummyMatch) {
+                req.session.user = { id: user.id, username: user.username, email: user.email };
+                res.redirect("/items");
+            } else {
+                res.render("login", { error: "Invalid credentials" });
+            }
+        } else {
+            res.render("login", { error: "User not found" });
+        }
+    }).catch(err => {
+        console.error(err);
+        res.status(500).send("Server Error");
+    });
+});
+
+// Handle logout
+app.get("/logout", function(req, res) {
+    req.session.destroy();
+    res.redirect("/login");
 });
 
 module.exports = app;

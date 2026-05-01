@@ -119,3 +119,15 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Documents & generated files (not application code)
+*.pdf
+*.docx
+*.pptx
+*.md
+~$*
+generate_*.js
+read_brief.js
+seed.js
+assessment_brief_text.txt
+app/views/websnap/

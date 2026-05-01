@@ -21,7 +21,13 @@ html(lang="en")
             a(href="/items") Food Listings
             a(href="/categories") Categories
             a(href="/users") Community
-          button(onclick="window.location.href='/'", class="btn btn-primary") Post Food
+            if sessionUser
+              a(href="/users/" + sessionUser.id) Profile
+              a(href="/logout") Logout
+            else
+              a(href="/login") Login
+              a(href="/signup") Sign Up
+          button(onclick="window.location.href='/items'", class="btn btn-primary") Browse Food
     main.container(style="min-height: 70vh;")
       block content
     footer.container(style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;")
